@@ -4,7 +4,7 @@
   "description": "",
   "main": "todo.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "prepare": "cd..&&husky install todo-cli/.husky"
   },
   "lint-staged": {
