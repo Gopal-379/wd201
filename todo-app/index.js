@@ -4,14 +4,33 @@ const express = require("express");
 const app = express();
 
 const bodyParser = require("body-parser");
+const path = require("path");
+
 app.use(bodyParser.json());
 
 const { Todo } = require("./models");
 
 app.get("/todos", (req, res) => {
   //res.send("Hello, World!");
-  console.log("Todo List");
+  console.log("Todo List", req.body);
 });
+
+app.set("view engine", "ejs");
+
+app.get("/", async (req, res) => {
+  const allTodos = await Todo.getTodos();
+  if (req.accepts("html")) {
+    res.render("index", {
+      allTodos,
+    });
+  } else {
+    res.json({
+      allTodos,
+    });
+  }
+});
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.post("/todos", async (req, res) => {
   console.log("Creating a Todo", req.body);
@@ -32,11 +51,11 @@ app.put("/todos/:id/markAsCompleted", async (req, res) => {
   console.log("We have to update a todo with ID:", req.params.id);
   const todo = await Todo.findByPk(req.params.id);
   try {
-      const updatedTodo = await todo.markAsCompleted();
-      return res.json(updatedTodo);
+    const updatedTodo = await todo.markAsCompleted();
+    return res.json(updatedTodo);
   } catch (error) {
-      console.log(error);
-      return res.status(422).json(error);
+    console.log(error);
+    return res.status(422).json(error);
   }
 });
 
