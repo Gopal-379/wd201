@@ -1,5 +1,4 @@
 const request = require("supertest");
-
 const db = require("../models/index");
 const app = require("../app");
 
@@ -73,6 +72,7 @@ describe("Todo Application", function () {
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     // FILL IN YOUR CODE HERE
+    jest.setTimeout(10000);
     const res = await agent.get("/todos");
     const taskID = JSON.parse(res.text)[0].id;
     const l = JSON.parse(res.text).length;

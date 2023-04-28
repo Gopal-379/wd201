@@ -6,10 +6,10 @@ app.use(bodyParser.json());
 
 const path = require("path");
 
-app.get("/todos", (req, res) => {
-  //res.send("Hello, World!");
-  console.log("Todo List", req.body);
-});
+// app.get("/todos", (req, res) => {
+//   res.send("Hello, World!");
+//   console.log("Todo List", req.body);
+// });
 
 app.set("view engine", "ejs");
 
