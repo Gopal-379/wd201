@@ -4,6 +4,30 @@ const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
+const path = require("path");
+
+app.get("/todos", (req, res) => {
+  //res.send("Hello, World!");
+  console.log("Todo List", req.body);
+});
+
+app.set("view engine", "ejs");
+
+app.get("/", async (req, res) => {
+  const allTodos = await Todo.getTodos();
+  if (req.accepts("html")) {
+    res.render("index", {
+      allTodos,
+    });
+  } else {
+    res.json({
+      allTodos,
+    });
+  }
+});
+
+app.use(express.static(path.join(__dirname, "public")));
+
 app.get("/", function (req, res) {
   res.send("Hello World");
 });
