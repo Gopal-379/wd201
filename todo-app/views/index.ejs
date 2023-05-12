@@ -10,8 +10,8 @@
   </head>
   <body>
     <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-3">
-        <%- include('header.ejs') %>
+      <div class="col-start-3 col-span-2">
+        <%- include('header') %>
         <form>
           <div class="flex gap-2 py-4">
             <div class="flex-auto">
@@ -38,7 +38,8 @@
             </div>
           </div>
         </form>
-        <%- include('todos') %> <%- include('footer') %>
+        <div class="col-start-3 col-span-2"><%- include('todos') %></div>
+        <div class="col-start-3 col-span-2"><%- include('footer') %></div>
       </div>
     </div>
   </body>

@@ -13,16 +13,14 @@ const path = require("path");
 
 app.set("view engine", "ejs");
 
-app.get("/", async (req, res) => {
-  const allTodos = await Todo.getTodos();
-  if (req.accepts("html")) {
-    res.render("index", {
-      allTodos,
-    });
+app.get("/", async (request, response) => {
+  const overdueTodos = await Todo.overdue();
+  const dueTodayTodos = await Todo.dueToday();
+  const dueLaterTodos = await Todo.dueLater();
+  if (request.accepts("html")) {
+    response.render("index", { overdueTodos, dueTodayTodos, dueLaterTodos });
   } else {
-    res.json({
-      allTodos,
-    });
+    response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
   }
 });
 
