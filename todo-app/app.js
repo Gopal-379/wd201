@@ -3,6 +3,7 @@ const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 
 const path = require("path");
 
@@ -58,8 +59,11 @@ app.get("/todos/:id", async function (req, res) {
 
 app.post("/todos", async function (req, res) {
   try {
-    const todo = await Todo.addTodo(req.body);
-    return res.json(todo);
+    const todo = await Todo.addTodo({
+      title: req.body.title,
+      dueDate: req.body.dueDate,
+    });
+    return res.redirect("/");
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);
