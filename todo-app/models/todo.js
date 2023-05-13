@@ -52,6 +52,14 @@ module.exports = (sequelize, DataTypes) => {
       return dulr;
     }
 
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }

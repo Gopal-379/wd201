@@ -10,16 +10,17 @@
         class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-violet-50"
       >
         <input
-          id="todo-cb-<%= td.id %>"
-          type="checkbox"
+          id="todo-checkbox-<%= td.id %>"
+          type="checkbox" <%= td.completed ? "checked" : "" %> 
+          onclick="updateTodos(<%= td.id %>)"
           class="w-4 h-4 text-blue-600 bg-gray-100 rounded"
         />
         <label
-          for="todo-cb-<%td.id %>"
+          for="todo-checkbox-<%= td.id %>"
           class="ml-2 text-sm text-gray-600 cursor-pointer"
           ><%= td.title %></label
         >
-        <a href="#" class="hidden trash-icon ml-4">
+        <a href="#" class="hidden trash-icon ml-4" onclick="deleteTodos(<%= td.id %>)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -56,14 +57,14 @@
           class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-violet-50"
         >
           <input
-            id="todo-cb-<%= td.id %>"
-            type="checkbox"
+            id="todo-checkbox-<%= td.id %>"
+            type="checkbox" <%= td.completed? "checked" : "" %> onclick="updateTodos(<%= td.id %>)"
             class="w-4 h-4 text-blue-600 bg-gray-100 rounded border"
           />
-          <label for="todo-cb-<%= td.id %>" class="ml-2 text-sm text-gray-600 cursor-pointer"
+          <label for="todo-checkbox-<%= td.id %>" class="ml-2 text-sm text-gray-600 cursor-pointer"
             ><%= td.title %></label
           >
-          <a href="#" class="hidden trash-icon ml-4">
+          <a href="#" class="hidden trash-icon ml-4" onclick="deleteTodos(<%= td.id %>)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -100,14 +101,14 @@
           class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-violet-50"
         >
           <input
-            id="todo-cb-<%= td.id %>"
-            type="checkbox"
+            id="todo-checkbox-<%= td.id %>"
+            type="checkbox" <%= td.completed ? "checked" : "" %> onclick="updateTodos(<%= td.id %>)"
             class="w-4 h-4 text-blue-600 bg-gray-100 rounded border"
           />
-          <label for="todo-cb-<%= td.id %>" class="ml-2 text-sm text-gray-600 cursor-pointer"
+          <label for="todo-checkbox-<%= td.id %>" class="ml-2 text-sm text-gray-600 cursor-pointer"
             ><%= td.title %></label
           >
-          <a href="#" class="hidden trash-icon ml-4">
+          <a href="#" class="hidden trash-icon ml-4" onclick="deleteTodos(<%= td.id %>)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

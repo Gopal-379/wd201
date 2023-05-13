@@ -88,21 +88,11 @@ app.delete("/todos/:id", async function (req, res) {
   // First, we have to query our database to delete a Todo by ID.
   // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
   // res.send(true)
-
   try {
-    await Todo.destroy({
-      where: {
-        id: req.params.id,
-      },
-    }).then((er) => {
-      if (!er) {
-        return res.status(404).send(false);
-      } else {
-        res.status(404).send(true);
-      }
-    });
-  } catch (error) {
-    res.status(422).json(error);
+    await Todo.remove(req.params.id);
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(422).json(err);
   }
 });
 
