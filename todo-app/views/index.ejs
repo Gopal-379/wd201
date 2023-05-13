@@ -4,12 +4,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="<%= csrfToken %>" />
     <link href="./css/styles.css" rel="stylesheet" />
     <script>
+      var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
       function updateTodos(id) {
         fetch(`/todos/${id}/markAsCompleted`, {
           method: 'put',
           headers: {"Content-Type": "application/json" },
+          body: JSON.stringify({
+            "_csrf": token,
+          })
         })
         .then((res) => {
           if (res.ok) {
@@ -23,6 +28,9 @@
         fetch(`/todos/${id}`, {
           method: 'delete',
           headers: {"Content-Type": "application/json" },
+          body: JSON.stringify({
+            "_csrf": token,
+          })
         })
         .then((res) => {
           if (res.ok) {
@@ -40,6 +48,7 @@
       <div class="col-start-3 col-span-2">
         <%- include('header') %>
         <form action="/todos" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <div class="flex gap-2 py-4">
             <div class="flex-auto">
               <input

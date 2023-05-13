@@ -1,9 +1,13 @@
 const express = require("express");
+var csrf = require("csurf");
 const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("Shh! Some Secret String"));
+app.use(csrf({ cookie: true }));
 
 const path = require("path");
 
@@ -19,7 +23,12 @@ app.get("/", async (request, response) => {
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
   if (request.accepts("html")) {
-    response.render("index", { overdueTodos, dueTodayTodos, dueLaterTodos });
+    response.render("index", {
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      csrfToken: request.csrfToken(),
+    });
   } else {
     response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
   }
