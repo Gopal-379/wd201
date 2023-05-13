@@ -16,25 +16,31 @@ const path = require("path");
 //   console.log("Todo List", req.body);
 // });
 
+app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
   const overdueTodos = await Todo.overdue();
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
+  const completedItemsTodos = await Todo.completedItems();
   if (request.accepts("html")) {
     response.render("index", {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
+      completedItemsTodos,
       csrfToken: request.csrfToken(),
     });
   } else {
-    response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
+    response.json({
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      completedItemsTodos,
+    });
   }
 });
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (req, res) {
   res.send("Hello World");
@@ -79,10 +85,10 @@ app.post("/todos", async function (req, res) {
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async function (req, res) {
+app.put("/todos/:id", async function (req, res) {
   const todo = await Todo.findByPk(req.params.id);
   try {
-    const updatedTodo = await todo.markAsCompleted();
+    const updatedTodo = await todo.setCompletionStatus(req.body.completed);
     return res.json(updatedTodo);
   } catch (error) {
     console.log(error);

@@ -7,37 +7,43 @@
     <meta name="csrf-token" content="<%= csrfToken %>" />
     <link href="./css/styles.css" rel="stylesheet" />
     <script>
-      var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+      var token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
       function updateTodos(id) {
-        fetch(`/todos/${id}/markAsCompleted`, {
-          method: 'put',
-          headers: {"Content-Type": "application/json" },
+        const isChecked = document.querySelector(
+          `#todo-checkbox-${id}`
+        ).checked;
+        fetch(`/todos/${id}`, {
+          method: "put",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            "_csrf": token,
+            _csrf: token,
+            completed: isChecked,
+          }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.reload();
+            }
           })
-        })
-        .then((res) => {
-          if (res.ok) {
-            window.location.reload();
-          }
-        })
-        .catch((err) => console.error(err));
+          .catch((err) => console.error(err));
       }
 
       function deleteTodos(id) {
         fetch(`/todos/${id}`, {
-          method: 'delete',
-          headers: {"Content-Type": "application/json" },
+          method: "delete",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            "_csrf": token,
+            _csrf: token,
+          }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.reload();
+            }
           })
-        })
-        .then((res) => {
-          if (res.ok) {
-            window.location.reload();
-          }
-        })
-        .catch((err) => console.error(err));
+          .catch((err) => console.error(err));
       }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -78,7 +84,7 @@
           </div>
         </form>
         <div class="col-start-3 col-span-2"><%- include('todos') %></div>
-        <div class="col-start-3 col-span-2"><%- include('footer') %></div>
+        <!-- <div class="col-start-3 col-span-2"><%- include('footer') %></div> -->
       </div>
     </div>
   </body>

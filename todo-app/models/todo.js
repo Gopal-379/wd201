@@ -52,6 +52,15 @@ module.exports = (sequelize, DataTypes) => {
       return dulr;
     }
 
+    static completedItems() {
+      const coit = this.findAll({
+        where: {
+          completed: true,
+        },
+      });
+      return coit;
+    }
+
     static async remove(id) {
       return this.destroy({
         where: {
@@ -60,16 +69,20 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    markAsCompleted() {
+      return this.update({ completed: true });
+    }
+
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
     static getTodos() {
-      return this.findAll();
+      return this.findAll({ order: [["id", "ASC"]] });
     }
 
-    markAsCompleted() {
-      return this.update({ completed: true });
+    setCompletionStatus(statusCode) {
+      return this.update({ completed: statusCode });
     }
   }
   Todo.init(
