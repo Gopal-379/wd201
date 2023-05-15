@@ -51,7 +51,7 @@
   </head>
   <body>
     <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
+      <div class="col-start-3 col-span-3">
         <%- include('header') %>
         <form action="/todos" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
@@ -83,7 +83,7 @@
             </div>
           </div>
         </form>
-        <div class="col-start-3 col-span-2">
+        <div class="col-start-3 col-span-3">
           <%- include('todos.ejs', {title: "Overdue", data: overdueTodos}) %>
           <%- include('todos.ejs', {title: "Due Today", data: dueTodayTodos}) %>
           <%- include('todos.ejs', {title: "Due Later", data: dueLaterTodos}) %>
