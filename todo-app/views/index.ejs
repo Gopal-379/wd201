@@ -83,7 +83,12 @@
             </div>
           </div>
         </form>
-        <div class="col-start-3 col-span-2"><%- include('todos') %></div>
+        <div class="col-start-3 col-span-2">
+          <%- include('todos.ejs', {title: "Overdue", data: overdueTodos}) %>
+          <%- include('todos.ejs', {title: "Due Today", data: dueTodayTodos}) %>
+          <%- include('todos.ejs', {title: "Due Later", data: dueLaterTodos}) %>
+          <%- include('todos.ejs', {title: "Completed Items", data: completedItemsTodos}) %>
+        </div>
         <!-- <div class="col-start-3 col-span-2"><%- include('footer') %></div> -->
       </div>
     </div>
