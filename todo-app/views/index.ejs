@@ -53,6 +53,9 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-3">
         <%- include('header') %>
+        <p class="py-2">Welcome to To-Do Manager</p>
+        <p class="py-2">New Here?<a href="/signup" class="text-green-600"> Sign-up Now</a></p>
+        <p class="py-2">Already have an account?<a href="/login" class="text-green-600"> Sign-in</a></p>
         <form action="/todos" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <div class="flex gap-2 py-4">
@@ -76,7 +79,7 @@
             <div class="flex-none">
               <button
                 type="submit"
-                class="bg-rose-400 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
+                class="bg-green-600 hover:bg-green-800 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
               >
                 Add
               </button>

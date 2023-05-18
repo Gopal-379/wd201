@@ -1,7 +1,7 @@
 const express = require("express");
 var csrf = require("tiny-csrf");
 const app = express();
-const { Todo } = require("./models");
+const { Todo, User } = require("./models");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
@@ -39,6 +39,25 @@ app.get("/", async (request, response) => {
       dueLaterTodos,
       completedItemsTodos,
     });
+  }
+});
+
+app.get("/signup", (req, res) => {
+  res.render("signup", { title: "Signup", csrfToken: req.csrfToken() });
+});
+
+app.post("/users", async (req, res) => {
+  console.log("FirstName", req.body.firstName);
+  try {
+    const user = await User.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+    });
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
   }
 });
 
