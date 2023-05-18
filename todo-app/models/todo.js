@@ -18,26 +18,28 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.create(params);
     }
 
-    static async overdue() {
+    static async overdue(userId) {
       // FILL IN HERE TO RETURN OVERDUE ITEMS
       const od = await Todo.findAll({
         where: {
           dueDate: {
             [Op.lt]: new Date().toLocaleDateString("en-CA"),
           },
+          userId,
           completed: false,
         },
       });
       return od;
     }
 
-    static async dueToday() {
+    static async dueToday(userId) {
       // FILL IN HERE TO RETURN ITEMS DUE tODAY
       const duty = await Todo.findAll({
         where: {
           dueDate: {
             [Op.eq]: new Date().toLocaleDateString("en-CA"),
           },
+          userId,
           completed: false,
         },
       });
@@ -45,32 +47,35 @@ module.exports = (sequelize, DataTypes) => {
       return duty;
     }
 
-    static async dueLater() {
+    static async dueLater(userId) {
       // FILL IN HERE TO RETURN ITEMS DUE LATER
       const dulr = await Todo.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date().toLocaleDateString("en-CA"),
           },
+          userId,
           completed: false,
         },
       });
       return dulr;
     }
 
-    static completedItems() {
+    static async completedItems(userId) {
       const coit = this.findAll({
         where: {
           completed: true,
+          userId,
         },
       });
       return coit;
     }
 
-    static async remove(id) {
+    static async remove(id, userId) {
       return this.destroy({
         where: {
           id,
+          userId,
         },
       });
     }
@@ -79,8 +84,13 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed: true });
     }
 
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+    static addTodo({ title, dueDate, userId }) {
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+        userId,
+      });
     }
 
     static getTodos() {
