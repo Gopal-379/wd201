@@ -1,5 +1,5 @@
 const request = require("supertest");
-const cheerio = require("cheerio");
+var cheerio = require("cheerio");
 const db = require("../models/index");
 const app = require("../app");
 
@@ -101,7 +101,7 @@ describe("Todo Application", function () {
         _csrf: csrfToken,
         completed: true,
       });
-    console.log(markCompleteResponse);
+    // console.log(markCompleteResponse);
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(true);
 

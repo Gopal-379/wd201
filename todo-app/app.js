@@ -9,6 +9,7 @@ const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
 const LocalStrategy = require("passport-local");
+const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
@@ -20,6 +21,8 @@ app.use(cookieParser("Shh! Some Secret String"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 const path = require("path");
+app.set("views", path.join(__dirname, "views"));
+app.use(flash());
 
 // app.get("/todos", (req, res) => {
 //   res.send("Hello, World!");
@@ -40,6 +43,10 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function (req, res, next) {
+  res.locals.messages = req.flash();
+  next();
+});
 
 passport.use(
   new LocalStrategy(
@@ -54,11 +61,11 @@ passport.use(
           if (result) {
             return done(null, user);
           } else {
-            return done("Invalid password");
+            return done(null, false, { message: "Invalid password" });
           }
         })
-        .catch((error) => {
-          return error;
+        .catch(() => {
+          return done(null, false, { message: "Invalid User" });
         });
     }
   )
@@ -119,6 +126,19 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
+  if (req.body.email.length == 0) {
+    req.flash("error", "Email can not be empty");
+    return res.redirect("/signup");
+  }
+  if (req.body.firstName.length == 0) {
+    req.flash("error", "First name can not be empty");
+    return res.redirect("/signup");
+  }
+  if (req.body.password.length == 0) {
+    req.flash("error", "Password can not be empty");
+    return res.redirect("/signup");
+  }
+
   const hashedPwd = await bcrypt.hash(req.body.password, saltRounds);
   try {
     const user = await User.create({
@@ -130,11 +150,16 @@ app.post("/users", async (req, res) => {
     req.login(user, (err) => {
       if (err) {
         console.log(err);
+        res.redirect("/todo");
+      } else {
+        req.flash("success", "Sign up successful");
+        res.redirect("/todo");
       }
-      res.redirect("/todo");
     });
   } catch (error) {
     console.log(error);
+    req.flash("error", "User Already Exist with this mail");
+    return res.redirect("/signup");
   }
 });
 
@@ -144,7 +169,10 @@ app.get("/login", function (req, res) {
 
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (req, res) => {
     res.redirect("/todo");
   }
@@ -189,6 +217,18 @@ app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async function (req, res) {
+    if (req.body.dueDate.length == 0) {
+      req.flash("error", "Date can not be empty");
+      return res.redirect("/todo");
+    }
+    if (req.body.title.length == 0) {
+      req.flash("error", "Title can not be empty");
+      return res.redirect("/todo");
+    } else if (req.body.title.length < 5) {
+      req.flash("error", "Title should be atleat 5 character in length");
+      return res.redirect("/todo");
+    }
+
     try {
       const todo = await Todo.addTodo({
         title: req.body.title,
